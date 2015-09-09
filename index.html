@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+        div {
+            float: left;
+            width: 20px;
+            margin: 1px;
+            height: 1px;
+            background: red;
+        }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io('http://localhost:8000');
+
+        var created = false;    
+        function bins(n){
+            for (var i = 0; i < n; i++) {
+                var d = document.createElement("div");
+                d.setAttribute("id", i);
+                document.body.appendChild(d);
+            };            
+        }
+        
+        socket.on('data', function (data) {
+            if(!created) { created = true; bins(data.length) }
+            var min = Math.min.apply(null, data);
+            var max = Math.max.apply(null, data);
+            var minMax = max+Math.abs(min);
+            for (var i = 0; i < data.length; i++) {
+                document.getElementById(i).style.height = ((data[i]+Math.abs(min))/minMax*200)+"px";
+            };
+            console.log("MAX "+max+" MIN "+min);
+        });
+    </script>
+</head>
+<body>    
+</body>
+</html>
+
+
